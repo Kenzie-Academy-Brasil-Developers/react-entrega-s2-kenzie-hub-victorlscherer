@@ -31,6 +31,7 @@ const FormLogin = () => {
                 console.log(response)
                 localStorage.clear()
                 localStorage.setItem("token", JSON.stringify(response.data.token))
+                localStorage.setItem("id", JSON.stringify(response.data.user.id))
                 history.push("/home")
             })
             .catch((e) => console.log(e))

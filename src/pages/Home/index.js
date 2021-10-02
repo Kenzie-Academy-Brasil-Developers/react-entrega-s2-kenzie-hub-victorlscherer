@@ -8,9 +8,11 @@ const Home = () => {
 
     const history = useHistory()
 
+    const [id] = useState(JSON.parse(localStorage.getItem("id")));
+
     const [user, setUser] = useState({})
 
-    const [techs, setTech] = useState()
+    const [techs, setTech] = useState([])
 
     const [token, setToken] = useState(() => {
         const localToken = localStorage.getItem("token") || "";
@@ -18,24 +20,17 @@ const Home = () => {
     })
 
     useEffect(() => {
-        axios.get("https://kenziehub.herokuapp.com/profile", {
+
+
+        axios.get(`https://kenziehub.herokuapp.com/users/${id}`, {
             headers: { Authorization: `Bearer ${token}` }
         }).then((response) => {
-            console.log(response.data)
+            setUser(response.data)
+            setTech(response.data.techs)
         })
             .catch((e) => console.log(e))
 
     })
-
-    useEffect(() => {
-        axios.get("https://kenziehub.herokuapp.com/profile", {
-            headers: { Authorization: `Bearer ${token}` }
-        }).then((response) => {
-            console.log(response.data.techs)
-        })
-            .catch((e) => console.log(e))
-
-    }, [])
 
     const toPageTech = () => {
         history.push("/tech")
@@ -45,7 +40,7 @@ const Home = () => {
         <div>
             <h1>{user.name}</h1>
             <div>
-                {techs.map((tech) => <TechCard key={tech.title} tech={tech} />)}
+                {techs.map((tech) => <TechCard key={tech.title} tech={tech} token={token} />)}
             </div>
             <Button onClick={toPageTech} >Cadastrar nova tecnologia</Button>
         </div>
